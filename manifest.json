@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "name": "Meet SPECulator",
   "short_name": "Meet SPECulator",
-  "description": "Recommends Google Meet performance settings based on device CPU/memory..",
+  "description": "Recommends Google Meet performance settings based on device CPU/memory.",
   "version": "1.03",
   "browser_action": {
     "default_icon": "icon.png",
