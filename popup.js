@@ -67,8 +67,10 @@ document.onreadystatechange = function () {
             cpu_level = 3;
             }
         } else if (cpu_model.includes('aarch64')) {
-          // Assume this is a Mediatek 8173 or equivalent
-          cpu_level = 1;
+          if (cpu_count >= 4) {
+            // Assume this is a Mediatek 8173 or equivalent
+            cpu_level = 1;
+          }
         }
         var mapped_items = {
           'CPU Model': cpu_model,
