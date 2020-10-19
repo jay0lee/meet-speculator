@@ -45,15 +45,24 @@ document.onreadystatechange = function () {
         cpu_model = cpu_model.replace(/ $/g, ''); // remove space at end of string
         var cpu_count = cpu_info.numOfProcessors;
         var memory_gb = Math.ceil(mem_info.capacity/1024/1024/1024);
+        var intel_generation = null;
         var cpu_level = 0;
         if (cpu_model.includes('Intel')) {
+          var intel_generation = 'Unknown-';
+          if (/[im][3-9]-[Y0-9]{4}/.test(cpu_model)) {
+              intel_generation = cpu_model.match(/[im][3-9]-(.)/)[1];
+              }
           if ((cpu_model.includes('N3') && cpu_count >= 4) || (cpu_model.includes('N4') && cpu_count >= 2)) {
+            intel_generation = null;
             cpu_level = 1;
             }
-          if ((cpu_model.includes('N4') && cpu_count >= 4) || (/i[3-9]-[17-9][Y0-9]{3}/.test(cpu_model))) {
+          if ((/N[45]/.test(cpu_model) && cpu_count >= 4) || (/[im][3-9]-[17-9][Y0-9]{3}/.test(cpu_model))) {
+            if (/N[45]/.test(cpu_model)) {
+              intel_generation = null;
+              }
             cpu_level = 2;
             }
-          if (/i[5-9]-[17-9][Y0-9]{3}/.test(cpu_model) && cpu_count >= 4) {
+          if (/[im][5-9]-[17-9][Y0-9]{3}/.test(cpu_model) && cpu_count >= 4) {
             cpu_level = 3;
             }
         } else if (cpu_model.includes('AMD')) {
@@ -77,6 +86,15 @@ document.onreadystatechange = function () {
           'CPU Count (logical)': cpu_count,
           'Memory': memory_gb + 'gb', 
           };
+        if (intel_generation != null) {
+          if (intel_generation < 7  && intel_generation != 1) {
+            gen_color = 'red';
+          } else {
+            gen_color = 'green';
+          }
+          mapped_items['Intel CPU Generation'] = intel_generation + 'th generation'
+          mapped_items['Intel CPU Generation'] = mapped_items['Intel CPU Generation'].fontcolor(gen_color);
+          }
         var meet_spec = 'Unsupported'.fontcolor('red');
         var recommended_view = 'spotlight only, no tiled'.fontcolor('red');
         var hd_recommended = 'Standard definition (360p)'.fontcolor('orange');
